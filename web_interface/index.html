@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobil-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 , viewport-fit=cover ,maximum-scale=1.0, user-scalable=no">
+  <title>ITHS INTERFACE</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+
+  <script>
+    function moveRobot(position, node_name, callback_message) {
+      const request = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ position, isUpdated: true })
+      }
+      fetch(node_name, request).then(_response => console.log(position))
+    }
+
+    function startButton(){
+      document.getElementById("myNav").className="overlay-gone"
+      setTimeout(overlayAppear,15000)
+
+      min = Math.ceil(0)
+      max = Math.floor(100)
+      document.getElementById("scoreNumber").innerHTML= `your score is ${Math.floor(Math.random() * 101)}`
+    }
+    function moreButtonClicked(){
+      document.getElementById("scoreBoard").className="overlay-gone"
+      setTimeout(overlayAppear,15000)
+
+      min = Math.ceil(0)
+      max = Math.floor(100)
+      document.getElementById("scoreNumber").innerHTML= `your score is ${Math.floor(Math.random() * 101)}`
+    }
+
+    function overlayAppear(){
+      document.getElementById("scoreBoard").className="overlay"
+    }
+
+    function reset(){
+      console.log("reset")
+      fetch('/reset').then(response => {
+        console.log({response})
+        window.location.reload()
+      })
+    }
+  </script>
+</head>
+
+<body>
+
+  <div id="barsen">
+
+  <div id="left_hand_div">
+    <input type="range" min="0" max="3.14" value="0" step="0.1" id="move_left_arm" oninput="moveRobot(this.value, '/move_left_arm', 'Moved left arm')">
+  </div>
+
+  <div id="scoreBoard" class="overlay-gone">
+  <div id="score-text-reset-del">
+    <h1 id="scoreNumber"></h1>
+    <input id="resetButton" onclick="reset()"  type="button" value="Reset" /> 
+  </div>
+  </div>
+
+  <div id="myNav" class="overlay">
+    <input id="record-button" onclick= "startButton()"  type="button" value="start" />
+  </div>
+
+  <input type="range" min="0" max="6.28" value="3.14" step="0.1" id="move_torso" oninput="moveRobot(this.value, '/move_head', 'Moved head')">
+
+  <div id="right_hand_div">
+    <input type="range" min="0" max="3.14" value="0" step="0.1" id="move_right_arm" oninput="moveRobot(this.value, '/move_right_arm', 'Moved right arm')">
+  </div>
+
+  </div>
+
+</body>
+
+</html>
+

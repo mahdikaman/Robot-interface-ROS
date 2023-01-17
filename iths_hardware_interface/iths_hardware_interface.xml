@@ -1,0 +1,9 @@
+<library path="mock_components">
+
+  <class name="src/iths_hardware_interface" type="ith_hardware_interface::ITHSHardwareInterface" base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Interface for connecting to the ITHS robot
+    </description>
+  </class>
+
+</library>

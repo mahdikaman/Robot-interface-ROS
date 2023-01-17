@@ -1,0 +1,21 @@
+# Controller manager configuration
+controller_manager:
+  ros__parameters:
+    update_rate: 10  # Hz
+
+    ### Controllers available
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+
+### Properties of the controllers that we will use and definition of joints to use ###
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - head_joint
+      - left_arm_joint
+      - right_arm_joint
+    interface_name: position

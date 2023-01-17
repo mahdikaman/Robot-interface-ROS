@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<robot name="ithsbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Arbitrary value for mass -->
+  <xacro:property name="mass" value="1"/>
+  <!-- Robot dimensions -->
+  <xacro:property name="body_width" value="0.08"/>
+  <xacro:property name="body_height" value="0.12"/>
+  <xacro:property name="head_width" value="0.04"/>
+  <xacro:property name="head_height" value="0.03"/>
+  <xacro:property name="arm_width" value="0.01"/>
+  <xacro:property name="arm_height" value="0.08"/>
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find iths)/urdf/ithsbot.gazebo"/>
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find iths)/urdf/materials.xacro"/>
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="body_link"/>
+  </joint>
+
+  <!-- Body Link -->
+  <link name="body_link">
+    <collision>
+      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${body_width} ${body_width} ${body_height}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${body_width} ${body_width} ${body_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass / 12.0 * (body_width*body_width + body_height*body_height)}" ixy="0.0" ixz="0.0" iyy="${mass / 12.0 * (body_height*body_height + body_width*body_width)}" iyz="0.0" izz="${mass / 12.0 * (body_width*body_width + body_width*body_width)}"/>
+    </inertial>
+  </link>
+
+  <joint name="head_joint" type="continuous">
+    <parent link="body_link"/>
+    <child link="head_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- Head Link -->
+  <link name="head_link">
+    <collision>
+      <origin xyz="0 0 ${body_height + head_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${head_width} ${head_width} ${head_height}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${body_height + head_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${head_width} ${head_width} ${head_height}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${body_height + head_height/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass / 12.0 * (head_width*head_width + head_height*head_height)}" ixy="0.0" ixz="0.0" iyy="${mass / 12.0 * (head_height*head_height + head_width*head_width)}" iyz="0.0" izz="${mass / 12.0 * (head_width*head_width + head_width*head_width)}"/>
+    </inertial>
+  </link>
+
+  <joint name="left_arm_joint" type="continuous">
+    <parent link="body_link"/>
+    <child link="left_arm_link"/>
+    <origin xyz="0 0 ${body_height - 0.02}" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <!-- Left arm link -->
+  <link name="left_arm_link">
+    <collision>
+      <origin xyz="-${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${arm_width} ${arm_width} ${arm_height}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${arm_width} ${arm_width} ${arm_height}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="-${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass / 12.0 * (arm_width*arm_width + arm_height*arm_height)}" ixy="0.0" ixz="0.0" iyy="${mass / 12.0 * (arm_height*arm_height + arm_width*arm_width)}" iyz="0.0" izz="${mass / 12.0 * (arm_width*arm_width + arm_width*arm_width)}"/>
+    </inertial>
+  </link>
+
+  <joint name="right_arm_joint" type="continuous">
+    <parent link="body_link"/>
+    <child link="right_arm_link"/>
+    <origin xyz="0 0 ${body_height - 0.02}" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+   <!-- Right arm link -->
+  <link name="right_arm_link">
+    <collision>
+      <origin xyz="${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${arm_width} ${arm_width} ${arm_height}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${arm_width} ${arm_width} ${arm_height}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${body_width/2 + arm_width/2} 0 ${arm_height/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass / 12.0 * (arm_width*arm_width + arm_height*arm_height)}" ixy="0.0" ixz="0.0" iyy="${mass / 12.0 * (arm_height*arm_height + arm_width*arm_width)}" iyz="0.0" izz="${mass / 12.0 * (arm_width*arm_width + arm_width*arm_width)}"/>
+    </inertial>
+  </link>
+
+  <ros2_control name="GazeboSystem" type="system">
+    
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="head_joint">
+      <command_interface name="position">
+        <param name="min">-6.28</param>
+        <param name="max">6.28</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+
+    <joint name="left_arm_joint">
+      <command_interface name="position">
+        <param name="min">-6.28</param>
+        <param name="max">6.28</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+
+    <joint name="right_arm_joint">
+      <command_interface name="position">
+        <param name="min">-6.28</param>
+        <param name="max">6.28</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+    
+  </ros2_control>
+
+  <!-- Gazebo's ros2_control plugin -->
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+      <parameters>$(find iths)/config/iths_controller_configuration.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+
+</robot>
+
